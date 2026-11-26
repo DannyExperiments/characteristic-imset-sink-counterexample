@@ -1,0 +1,181 @@
+\documentclass[11pt]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.02in]{geometry}
+\DeclareFontShape{OT1}{cmr}{bx}{n}{<-> cmbx10}{}
+\DeclareMathSizes{8}{8}{8}{8}
+\DeclareMathSizes{9}{9}{8}{8}
+\DeclareMathSizes{10.95}{10.95}{8}{8}
+\newtheorem{theorem}{Theorem}
+\newcommand{\CIM}{\operatorname{CIM}}
+\title{A five-vertex counterexample to the characteristic imset sink conjecture}
+\date{November 27, 2026}
+\begin{document}
+\begin{abstract}
+Making a vertex a sink can change the characteristic imset without
+moving along a polytope edge. On a diamond with a pendant vertex,
+four acyclic orientations give two distinct segments with the same
+midpoint. This answers Conjecture~1 of Restadh in the negative.
+Exact integer exposing functionals certify minimality on at most
+four vertices. The example extends to connected graphs of every
+order at least five. The earlier full five-vertex edge census
+already classified the relevant pair.
+\end{abstract}
+\maketitle
+
+\section{The conjecture}
+For a directed acyclic graph \(H\) and vertex \(v\), write
+\(\operatorname{pa}_H(v)\) for the vertices with arcs into \(v\).
+The characteristic imset is the \(0/1\) vector whose coordinate
+at \(S\), for each vertex subset \(S\) of size at least two, is
+\[
+ c_H(S)=1\quad\Longleftrightarrow\quad
+ \exists v\in S:\ S\setminus\{v\}\subseteq\operatorname{pa}_H(v).
+\]
+In particular its pair coordinates record the skeleton. Two DAGs
+have the same imset exactly when they are Markov equivalent
+\cite[Theorem~1.4]{diam}. For an undirected \(G\), the convex hull
+of the imsets of all DAGs with skeleton \(G\) is \(\CIM_G\).
+Every distinct imset is a vertex. A convex combination of binary
+vectors can equal a binary vector only when every positive-weight
+summand agrees with it in every coordinate.
+
+The sink operation \(H\downarrow i\) reverses every outgoing arc
+at \(i\) and preserves all other arcs. It preserves acyclicity
+because any new cycle would pass through the new sink. Restadh
+\cite[Conjecture~1, p.~11]{diam} asks whether, whenever this operation
+changes the imset, the segment joining the old and new imsets is
+an edge of \(\CIM_G\).
+
+\begin{theorem}
+There is a five-vertex counterexample to the sink conjecture.
+There is a connected counterexample of every order at least five.
+An exhaustive exact check finds an exposing functional for every
+imset-changing sink move on at most four vertices.
+\end{theorem}
+
+\section{Four orientations and their midpoint}
+Take vertices \(0,1,2,3,4\) and the skeleton with edges
+\[
+  01,\quad 02,\quad 03,\quad 04,\quad 12,\quad 13.
+\]
+This is a diamond on \(0,1,2,3\) with a leaf \(4\) at \(0\).
+Orient from earlier to later in each listed order. The entries of
+the table are parent sets, with the dash denoting the empty set.
+\[
+\begin{array}{c|c|ccccc}
+ &\text{order}&0&1&2&3&4\\ \hline
+D&(4,2,0,3,1)&24&023&-&0&-\\
+T&(4,0,3,1,2)&4&03&01&0&-\\
+U&(4,0,3,2,1)&4&023&0&0&-\\
+V&(4,2,0,1,3)&24&02&-&01&-
+\end{array}
+\]
+Moving vertex \(2\) to the end changes precisely its two arcs,
+so \(T=D\downarrow 2\). The pair coordinates are the same for all
+four imsets. Among larger sets, precisely \(012\) and \(013\)
+are nonzero in all four. The other nonzero coordinates are
+\[
+\begin{array}{c|l}
+D&123,\ 0123,\ 024\\
+T&\text{none}\\
+U&123,\ 0123\\
+V&024.
+\end{array}
+\]
+Indeed, a parent set supplies the center together with each nonempty
+subset of its parents. For example, vertex \(1\) of \(D\) contributes
+\(012,013,123,0123\) in the displayed sizes. Vertex \(0\) of \(D\)
+contributes \(024\).
+
+The four imsets are distinct and satisfy
+\[
+                 c_D+c_T=c_U+c_V.
+\]
+If \([c_D,c_T]\) were an edge, its midpoint would be in that face.
+The face property would put both \(c_U\) and \(c_V\) on the same
+segment. The only binary points of a segment between different
+binary vectors are its endpoints. This contradicts distinctness.
+This use of a second pair with the same midpoint is the standard
+rhombus criterion \cite[Sec.~2]{rhombus}.
+
+\section{Connected lifts}
+Take any graph containing the given five vertices as an induced
+subgraph and with no new neighbor of \(2\). Place all new vertices
+after the old ones in the four orders, using one common order
+among the new vertices. Then each old parent set is unchanged,
+and each new parent set is independent of which old order was used.
+For a coordinate \(S\) containing a new vertex, a center in \(S\)
+must be new, since no old vertex has a new parent. Thus every
+coordinate involving a new vertex is common to all four imsets.
+The old coordinates, midpoint equality, and distinctness are
+preserved. So is the sink move, because \(2\) has no new incident
+edge. Attaching the new vertices as leaves at \(4\) gives connected
+examples of every larger order.
+
+\section{Exact minimality check}
+For \(1\le n\le4\), enumerate every labelled skeleton by choosing
+its edge subset. Enumerate all acyclic orientations of a fixed
+skeleton by trying each vertex order, since every DAG has a
+topological order. Orienting from earlier to later and moving one
+vertex to the end implements the sink operation exactly.
+
+For each distinct pair of affected imsets \(a,b\) of a fixed
+skeleton, let \(I\) be the coordinates where they differ.
+Intersect the polytope with the constraints fixing all coordinates
+outside \(I\) to their common binary value. This defines a face
+because each condition is an equality in a valid bound \(0\le
+x_S\le1\). The remaining vertices are exactly the distinct imsets
+agreeing with these common values. On this face, seek integer weights
+in \(\{-3,-2,\ldots,3\}^{I}\) that give equal score to \(a,b\) and
+strictly smaller scores to every other remaining vertex. Existence
+makes \([a,b]\) an edge of the face, hence of \(\CIM_G\).
+The search checks actual integer inequalities.
+
+For \(n=1,2\) no move changes an imset. At \(n=3,4\) there are
+24 and 2208 changing moves before removing duplicates from orders,
+direction and repeated choices. The corresponding counts of
+distinct unordered imset pairs are \(3\) and \(202\). The replay
+finds a supporting functional for each. Of the \(202\) pairs, 156
+have no other vertices in their common-coordinate face. The
+remaining 46 are certified with weights of magnitude at most 3.
+This finite step is an independent exhaustive minimality check.
+
+\clearpage
+\section{Scope and provenance}
+Linusson and Restadh \cite[Secs.~3 and 5]{rhombus} report the
+rhombus criterion complete for \(\CIM_n\) through order five
+and the full edge computation of \(\CIM_5\). That computation
+necessarily already classified the five-vertex pair. The explicit
+sink witness, its lift, and the direct small-order certificate are
+the focus here. The tree case of the edge structure is known
+\cite{edges}. The example has two triangles and reverses two arcs.
+The result rules out the proposed sink-edge argument for a linear
+diameter bound. The diameter bound itself remains a separate question.
+
+\section*{Verification and technical disclosure}
+The exact Python replay checks the imsets, nine larger connected
+examples and minimality. A partial Lean~4 certificate checks the
+five-vertex sink rewrite, distinct supports, coordinatewise
+midpoint, and affected coordinates. The geometric argument and the
+general lift are given here in ordinary mathematical proof.
+
+Internally reviewed, not peer reviewed. Under human direction,
+ChatGPT Astra~6.2 (OpenAI) generated the discovery proof and research
+packet. OpenAI Codex independently checked the mathematics.
+GPT-6.2 Sol (OpenAI) checked the literature and prepared the
+manuscript, direct exposing-vector check, partial Lean certificate
+and illustrations. DannyExperiments maintains the repository and is
+the preferred citation identity. No AI system is proposed as an author.
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{diam} P. Restadh, \emph{Diameters of the characteristic imset
+polytopes}, arXiv:2302.03647v2, 2023.
+\bibitem{rhombus} S. Linusson and P. Restadh,
+\emph{Rhombus criterion and the chordal graph polytope},
+arXiv:2305.05275, 2023.
+\bibitem{edges} S. Linusson, P. Restadh and L. Solus,
+\emph{On the edges of characteristic imset polytopes},
+Int. J. Approx. Reason. 191 (2026), 109606.
+\end{thebibliography}
+\end{document}

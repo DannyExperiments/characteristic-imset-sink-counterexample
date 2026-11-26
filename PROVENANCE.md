@@ -1,0 +1,3 @@
+# Provenance
+
+This release addresses Restadh’s Conjecture 1 and Q911 in the open problems catalog. The discovery packet supplies the four-DAG witness, lift, and a minimality approach using the earlier rhombus completeness computation. The release proof gives an independent direct minimality check by exposing integer functionals. The literature audit attributes the midpoint criterion and the earlier full edge census. [Catalog](https://github.com/10m-u/open-problems-catalog/blob/ca8d4d44ba3db527f19f28928c240168f545ecfe/problems/statistics_data_science/experimental-design-causal-inference.md#q911) · [Conjecture](https://arxiv.org/pdf/2302.03647v2#page=11)

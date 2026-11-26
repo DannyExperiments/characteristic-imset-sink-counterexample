@@ -1,0 +1,4 @@
+'SinkImset.exact_sink' does not depend on any axioms
+'SinkImset.distinct_supports' depends on axioms: [propext]
+'SinkImset.midpoint' depends on axioms: [propext]
+'SinkImset.nonconstant_coordinates' depends on axioms: [propext]

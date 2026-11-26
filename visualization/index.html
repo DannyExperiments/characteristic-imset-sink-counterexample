@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Characteristic imset midpoint explorer</title>
+<style>
+:root{font:16px/1.5 system-ui,sans-serif;color-scheme:dark;color:#eef7ff;background:#0b1523}
+*{box-sizing:border-box}body{margin:0}
+main{max-width:56rem;margin:auto;padding:1.5rem clamp(1rem,4vw,2rem)}
+h1{font-size:clamp(1.55rem,5vw,2.35rem);line-height:1.13;margin:0 0 .55rem}
+h2{font-size:1.04rem;margin:.2rem 0}
+p{color:#c0d4e6;margin:.45rem 0 .85rem}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center;margin:1rem 0}
+button{font:inherit;padding:.4rem .75rem;background:#19334d;color:#eef7ff;border:1px solid #405d78;border-radius:.4rem;cursor:pointer}
+button[aria-pressed="true"]{color:#101a27;background:#ffce79;border-color:#ffce79;font-weight:700}
+input[type="range"]{width:9.5rem;accent-color:#76dfc7}
+label{display:inline-flex;align-items:center;gap:.55rem}
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+article{background:#132338;border:1px solid #38516a;border-radius:.6rem;text-align:center;padding:.65rem}
+canvas{display:block;width:100%;height:auto} .note{min-height:3.7rem;margin:.3rem 0}
+.result{border-left:4px solid #ffce79;padding:.65rem .75rem;background:#132338;margin-top:1rem}
+.result p{margin:0}a{color:#a3dafd}
+:focus-visible{outline:2px solid #ffce79;outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+<h1>Two pairs, one midpoint</h1>
+<p>Pick an orientation. Changing D to T reverses the two arcs at vertex 2 to make it a sink. The amber segment joins their distinct imsets.</p>
+<div class="controls">
+  <div id="orientation" role="group" aria-label="Choose an orientation">
+    <button type="button" id="D" aria-pressed="true">D</button>
+    <button type="button" id="T" aria-pressed="false">T</button>
+    <button type="button" id="U" aria-pressed="false">U</button>
+    <button type="button" id="V" aria-pressed="false">V</button>
+  </div>
+  <label for="angle">Rotate <input id="angle" type="range" min="-58" max="58" value="15"></label>
+</div>
+<div class="panels">
+<article>
+  <h2 id="heading">Orientation D</h2>
+  <canvas id="dag" width="360" height="260" aria-label="DAG of the current orientation"></canvas>
+  <p id="arcs" class="note" aria-live="polite"></p>
+</article>
+<article>
+  <h2>Imset plane</h2>
+  <canvas id="plane" width="360" height="260" aria-label="The diagonals D–T and U–V cross at the same midpoint"></canvas>
+  <p id="coords" class="note" aria-live="polite"></p>
+</article>
+</div>
+<div class="result">
+  <h2>c<sub>D</sub> + c<sub>T</sub> = c<sub>U</sub> + c<sub>V</sub></h2>
+  <p>A face containing the midpoint must contain both endpoints of every segment through it in the polytope. The amber segment therefore cannot be an edge.</p>
+</div>
+<p>The other coordinates are shared. The changes displayed are coordinates 123, 0123 and 024. The paper proves the certificate and checks five-vertex minimality.</p>
+</main>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const edges = [[0,1],[0,2],[0,3],[0,4],[1,2],[1,3]];
+const orders = {D:[4,2,0,3,1], T:[4,0,3,1,2], U:[4,0,3,2,1], V:[4,2,0,1,3]};
+const node = [[121,129],[303,129],[212,36],[212,224],[36,129]];
+const rest = {D:[Math.SQRT2,1], T:[-Math.SQRT2,-1], U:[Math.SQRT2,-1], V:[-Math.SQRT2,1]};
+const ink="#eff8fe", text="#bfd3e5", gold="#ffce79", aqua="#76dfc7", card="#132338", grid="#38516a";
+let choice = "D";
+
+function line(ctx, a, b, color, width) {
+  ctx.strokeStyle=color;
+  ctx.lineWidth=width;
+  ctx.beginPath();
+  ctx.moveTo(...a);
+  ctx.lineTo(...b);
+  ctx.stroke();
+}
+
+function dot(ctx, at, radius, color, label) {
+  ctx.beginPath();
+  ctx.arc(...at,radius,0,2*Math.PI);
+  ctx.fillStyle=label ? card : color;
+  ctx.fill();
+  if (!label) return;
+  ctx.strokeStyle=color;
+  ctx.lineWidth=3;
+  ctx.stroke();
+  ctx.font="bold 24px system-ui";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillStyle=color;
+  ctx.fillText(label,...at);
+}
+
+function arrow(ctx,a,b,color) {
+  const angle=Math.atan2(b[1]-a[1],b[0]-a[0]);
+  const point=(p,offset,direction)=>[p[0]+offset*Math.cos(direction),p[1]+offset*Math.sin(direction)];
+  const start=point(a,19,angle), tip=point(b,-21,angle);
+  line(ctx,start,tip,color,4);
+  ctx.beginPath();
+  ctx.moveTo(...tip);
+  ctx.lineTo(...point(tip,-14,angle-.48));
+  ctx.lineTo(...point(tip,-14,angle+.48));
+  ctx.closePath();
+  ctx.fillStyle=color;
+  ctx.fill();
+}
+
+function draw() {
+  const graph=$("dag").getContext("2d"), plane=$("plane").getContext("2d");
+  graph.clearRect(0,0,360,260);
+  plane.clearRect(0,0,360,260);
+  const order=orders[choice];
+  const arcs=edges.map(([a,b])=>order.indexOf(a)<order.indexOf(b)?[a,b]:[b,a]);
+  for (const [a,b] of arcs) arrow(graph,node[a],node[b],(a===2||b===2)&&"DT".includes(choice)?gold:text);
+  node.forEach((at,n)=>dot(graph,at,16,n===2?gold:aqua,String(n)));
+  const theta=Number($("angle").value)*Math.PI/180;
+  const points=Object.fromEntries(Object.entries(rest).map(([name,[x,y]])=>{
+    const z=-x*Math.sin(theta), scale=62/(1+.075*(y*Math.sin(.46)+z*Math.cos(.46)));
+    return [name,[180+scale*x*Math.cos(theta),130-scale*(y*Math.cos(.46)-z*Math.sin(.46))]];
+  }));
+  for(const [a,b] of [["D","V"],["V","T"],["T","U"],["U","D"]]) line(plane,points[a],points[b],grid,4);
+  line(plane,points.D,points.T,gold,5);
+  line(plane,points.U,points.V,aqua,5);
+  dot(plane,[180,130],7,ink);
+  for(const [name,at] of Object.entries(points)) dot(plane,at,name===choice?18:15,"DT".includes(name)?gold:aqua,name);
+  $("heading").textContent="Orientation "+choice;
+  $("arcs").textContent=arcs.filter(a=>a.includes(2)).map(a=>a.join(" → ")).join(" · ");
+  const on=[[1,2,3],[0,1,2,3],[0,2,4]].map(s=>Number(s.some(v=>s.every(w=>w===v||arcs.some(([x,y])=>x===w&&y===v)))));
+  $("coords").textContent="Binary coordinates: "+on.join(", ");
+}
+for (const button of $("orientation").querySelectorAll("button")) {
+  button.addEventListener("click",()=>{
+    $(choice).setAttribute("aria-pressed","false");
+    choice=button.id;
+    button.setAttribute("aria-pressed","true");
+    draw();
+  });
+}
+$("angle").addEventListener("input",draw);
+draw();
+</script>
+</body>
+</html>

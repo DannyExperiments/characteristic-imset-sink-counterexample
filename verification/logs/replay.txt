@@ -1,0 +1,7 @@
+PASS: four distinct imsets, exact sink rewrite, and coordinatewise midpoint
+PASS: nine connected lifts from order 6 through order 14
+n=1: 0 changing moves, distinct pairs by exposing radius {}
+n=2: 0 changing moves, distinct pairs by exposing radius {}
+n=3: 24 changing moves, distinct pairs by exposing radius {0: 3}
+n=4: 2208 changing moves, distinct pairs by exposing radius {0: 156, 1: 12, 2: 30, 3: 4}
+PASS: exact supporting vectors for all smaller sink pairs

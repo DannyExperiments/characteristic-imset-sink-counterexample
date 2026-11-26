@@ -1,0 +1,29 @@
+{
+  "title": "A five-vertex counterexample to the characteristic imset sink conjecture",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "DannyExperiments"
+    }
+  ],
+  "keywords": [
+    "characteristic imset",
+    "directed acyclic graph",
+    "sink orientation",
+    "polytope adjacency",
+    "Markov equivalence"
+  ],
+  "description": "<p>Making a vertex a sink can change the characteristic imset without following an edge of its fixed-skeleton polytope. This five-vertex example answers Restadh’s Conjecture 1. Its skeleton is a diamond with a leaf.</p><p>Four acyclic orientations give distinct binary imsets. Reversing the two outgoing arcs at vertex 2 sends the first orientation to the second. The other two imsets have the same sum as the first pair. Any face containing their shared midpoint would contain all four, so the sink segment cannot be an edge. Adding vertices after the old ones leaves a connected counterexample at every larger order when new leaves are attached at vertex 4.</p><p>The full five-vertex edge census of Linusson and Restadh already classified the pair. The release supplies the explicit sink witness and extension. An independent exact computation proves minimality with integer exposing functionals on all smaller labeled skeletons. The diameter bound motivated by this conjecture remains a separate question.</p><p>Internally reviewed, not peer reviewed. A partial Lean certificate checks the sink rewrite, distinct supports and coordinatewise midpoint equality. Python replays the witness, larger examples and minimality.</p><p>Under human direction, ChatGPT Astra 6.2 (OpenAI) generated the discovery proof and research packet. OpenAI Codex independently checked the mathematics. GPT-6.2 Sol (OpenAI) checked the literature and prepared the manuscript, direct exposing-vector check, partial Lean certificate and illustrations. DannyExperiments is the preferred citation identity. No AI system is proposed as an author.</p><p>Release v1.0.0. https://github.com/DannyExperiments/characteristic-imset-sink-counterexample/releases/tag/v1.0.0</p>",
+  "license": "other-closed",
+  "notes": "All rights reserved. Publicly downloadable files are supplied without a repository-wide reuse license.",
+  "publication_date": "2026-11-27",
+  "version": "1.0.0",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/DannyExperiments/characteristic-imset-sink-counterexample/releases/tag/v1.0.0",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}
